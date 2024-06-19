@@ -1,0 +1,149 @@
+{
+    "intents": [
+        {
+            "tag": "greeting",
+            "patterns": [
+                "Hello",
+                "Hi",
+                "Hey",
+                "Good morning",
+                "Good afternoon",
+                "Good evening",
+                "Hi there",
+                "Hey there",
+                "Greetings",
+                "Howdy",
+                "Yo"
+            ],
+            "responses": [
+                "Hello! How can I assist you today?",
+                "Hi there! How can I help?",
+                "Hey! What can I do for you?",
+                "Good morning! How can I assist you?",
+                "Good afternoon! How can I help you?",
+                "Good evening! How can I assist you?",
+                "Hi! How can I help you?",
+                "Hey there! How can I assist you today?",
+                "Greetings! How can I help you?",
+                "Howdy! How can I assist you?",
+                "Yo! What can I do for you?"
+            ]
+        },
+        {
+            "tag": "goodbye",
+            "patterns": [
+              "Goodbye",
+              "Bye",
+              "See you later",
+              "Talk to you later",
+              "Catch you later",
+              "See ya",
+              "Take care",
+              "Have a good day",
+              "Have a good night",
+              "Farewell",
+              "See you soon",
+              "Until next time",
+              "Bye bye",
+              "Adios"
+            ],
+            "responses": [
+              "Goodbye! Have a great day!",
+              "Bye! Take care!",
+              "See you later!",
+              "Talk to you later!",
+              "Catch you later!",
+              "See ya! Have a good one!",
+              "Take care! Have a great day!",
+              "Have a good day!",
+              "Have a good night!",
+              "Farewell! Until next time!",
+              "See you soon!",
+              "Until next time! Goodbye!",
+              "Bye bye! Take care!",
+              "Adios! Have a great day!"
+            ]
+          }
+          ,
+          {
+            "tag": "no_answer",
+            "patterns": [
+              "I don't understand",
+              "What do you mean?",
+              "Can you explain?",
+              "I'm confused",
+              "That doesn't make sense",
+              "I need more information",
+              "I'm not sure what you mean",
+              "Could you clarify?",
+              "I don't know",
+              "Please elaborate",
+              "That's unclear",
+              "What are you talking about?",
+              ""
+            ],
+            "responses": [
+              "I apologize, I'm still learning. Can you rephrase that?",
+              "I'm sorry, I didn't quite catch that. Could you please repeat or clarify?",
+              "It seems I didn't understand your request. Could you provide more details?",
+              "I'm still learning and might not have the answer. Could you ask something else?",
+              "Sorry, I'm not sure I follow. Can you provide more context or ask in a different way?",
+              "I'm sorry, I don't have the information you're looking for. Is there something else I can assist with?"
+            ]
+          },
+          {
+            "tag": "name",
+            "patterns": [
+              "What's your name?",
+              "What do you call yourself?",
+              "Do you have a name?",
+              "Can you tell me your name?",
+              "Who are you?",
+              "What are you called?",
+              "Your name?",
+              "Names?",
+              "What should I call you?",
+              "Who am I talking to?"
+            ],
+            "responses": [
+              "I'm an AI assistant. You can call me Chat.",
+              "I'm Chat, your virtual assistant.",
+              "You're talking to Chat, your helpful assistant.",
+              "I don't have a personal name, but you can refer to me as Chat.",
+              "I'm an AI language model. You can call me Chat.",
+              "My name is Chat, at your service."
+            ]
+          },
+          {
+            "tag": "cheer_up",
+            "patterns": [
+              "I'm feeling down",
+              "I'm feeling sad",
+              "I'm feeling depressed",
+              "I'm feeling low",
+              "I'm feeling upset",
+              "I'm feeling blue",
+              "Cheer me up",
+              "Make me feel better",
+              "I need some encouragement",
+              "Tell me something positive",
+              "I could use some cheering up",
+              "Help me feel happier"
+            ],
+            "responses": [
+              "I'm sorry you're feeling this way. Remember, tough times don't last, but tough people do.",
+              "It's okay to feel down sometimes. You're not alone in this.",
+              "You're stronger than you know. This feeling won't last forever.",
+              "Sending you virtual hugs! Everything will be okay.",
+              "Here's a virtual high-five! You've got this.",
+              "Think of three things you're grateful for right now. It can really shift your perspective.",
+              "Take a deep breath. You're doing the best you can, and that's enough.",
+              "You're amazing just as you are. Keep shining!",
+              "This too shall pass. Hang in there!",
+              "Sending positive vibes your way! You've got so much strength within you.",
+              "You're not alone. I'm here for you. You can always talk to me.",
+              "Remember, every storm eventually runs out of rain. Brighter days are ahead."
+            ]
+          }          
+    ]
+}
