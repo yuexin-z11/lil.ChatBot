@@ -84,51 +84,55 @@ model = keras.models.Sequential([
     keras.layers.Dense(len(labels), activation='softmax')
 ])
 
-# Compile the model
-optimizer = keras.optimizers.Adam(learning_rate=0.0001)
+# compile the model
+# learning rate scheduling
+scheduler = tensorflow.keras.optimizers.schedules.ExponentialDecay(
+    initial_learning_rate=0.0001,
+    decay_steps=10000,
+    decay_rate=0.9
+)
+optimizer = tensorflow.keras.optimizers.Adam(learning_rate=scheduler)
 model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=['accuracy'])
 
 # Save and fit the model
-model.fit(train, out, epochs=200, batch_size=10, verbose=1)
-model.save("model1.h5")
+model.fit(train, out, epochs=100, batch_size=20, verbose=1)
+model.save("model1_improv.h5")
 
-# # # this function is to convert to a bag of words
-# def bag(s, word):
-#     bb = [0] * len(words)
-
-#     s_words = nltk.word_tokenize(s)
-#     s_words = [stemmer.stem(word.lower()) for word in s_words]
-
-#     for se in s_words:
-#         if se in words:
-#             bb[words.index(se)] = 1 
-
-#     return np.array(bb)
-
-# # prediction function
-# def predict(sentence):
-#     input_bag = bag(sentence, words)
-#     input_bag = np.array([input_bag])
-
-#     # use the model
-#     prediction = model.predict(input_bag)
-
-#     # get the index with the highest probability
-#     predicted_index = np.argmax(prediction) 
-#     tag = labels[predicted_index]
-
-#     # find the response
-#     for intent in data:
-#         if intent['tag'] == tag:
-#             responses = intent['responses']
-
-#     return random.choice(responses)
-
-# # time to interact 
-# while True:
-#     user_input = input("You: ")
-#     if user_input.lower() == 'quit':
-#         break
+# this function is to convert to a bag of words
+def bag(sentence, words, max_words):
+    bag = [0] * max_words  # Initialize bag with zeros
     
-#     response = predict(user_input)
-#     print("Bot:", response)
+    sentence_words = nltk.word_tokenize(sentence)
+    sentence_words = [stemmer.stem(word.lower()) for word in sentence_words]
+
+    for se in sentence_words:
+        if se in words:
+            bag[words.index(se)] = 1
+
+    return np.array(bag)
+
+# prediction function
+def predict(sentence):
+    input_bag = bag(sentence, words, train.shape[1])  
+    input_bag = np.reshape(input_bag, (1, -1))
+    
+    prediction = model.predict(input_bag)
+    predicted_index = np.argmax(prediction)
+    
+    if predicted_index < len(labels):
+        tag = labels[predicted_index]
+
+        for intent in data:
+            if intent['tag'] == tag:
+                responses = intent['responses']
+
+        return random.choice(responses)
+
+# time to interact 
+while True:
+    user_input = input("You: ")
+    if user_input.lower() == 'quit':
+        break
+    
+    response = predict(user_input)
+    print("Bot:", response)
