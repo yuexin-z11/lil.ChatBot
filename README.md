@@ -15,7 +15,7 @@ Initially, an attempt was made to create a ChatBot using Flask. However, this ap
 The `Chatbot` directory serves as the virtual environment specifically created for running this project.
 
 ### Source Folder
-Contains intent files used in the project. One before running the no_replicate 
+Contains intent files used in the project. One before running the no_replicate file, the other is after. 
 
 ### no_replicate File
 A utility file is used to ensure there are no duplicate patterns in the intent files. This file can be modified to suit different situations and has broad applications. 
