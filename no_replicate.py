@@ -1,4 +1,4 @@
-json to jsonl
+# json to jsonl
 # import pandas as pd
 # import json
 
@@ -49,29 +49,31 @@ input_file = "./source/his_intent.jsonl"
 # Path to the JSONL output file
 output_file = "./source/nintent.jsonl"
 
-# List to store dictionaries from JSONL
-data = []
+# Dictionary to store unique patterns for each tag
+unique_patterns = {}
 
-# Read JSONL file line by line
+# Read JSONL file line by line and deduplicate patterns
 with open(input_file, 'r', encoding='utf-8') as f:
     for line in f:
-        line_data = json.loads(line.strip())
-        data.append(line_data)
+        obj = json.loads(line.strip())  
+        tag = obj['tag']
+        patterns = obj['patterns']
 
-# Create a DataFrame from the JSONL data
-df = pd.DataFrame(data)
+        if tag not in unique_patterns:
+            unique_patterns[tag] = set() 
 
-# Deduplicate based on the 'question' column only
-deduplicated_df = df.drop_duplicates(subset=['question'])
+        unique_patterns[tag].update(patterns)
 
-# Shuffle the DataFrame if needed (optional)
-shuffled_df = deduplicated_df.sample(frac=1).reset_index(drop=True)
-
-# Write the deduplicated DataFrame back to JSONL format
-with open(output_file, 'a', encoding='utf-8') as f:
-    for index, row in shuffled_df.iterrows():
-        json.dump(row.to_dict(), f, ensure_ascii=False)
+# Write deduplicated data back to JSONL format
+with open(output_file, 'w', encoding='utf-8') as f:
+    for tag, patterns in unique_patterns.items():
+        obj = {
+            "tag": tag,
+            "patterns": list(patterns), 
+            "responses": []  
+        }
+        json.dump(obj, f, ensure_ascii=False)
         f.write('\n')
 
-print("Duplicates removed based on 'question' field and saved successfully to", output_file)
+print("Duplicates removed based on 'patterns' field and saved successfully to", output_file)
 
