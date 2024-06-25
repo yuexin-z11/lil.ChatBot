@@ -18,9 +18,6 @@ The `Chatbot` directory serves as the virtual environment specifically created f
 #### Source Folder
 Contains intent files used in the project. One before running the no_replicate file, the other is after. 
 
-#### no_replicate File
-A utility file is used to ensure there are no duplicate patterns in the intent files. This file can be modified to suit different situations and has broad applications. 
-
 #### one_file
 This file includes scripts for loading data, preprocessing, building the model, saving and testing it.
 
