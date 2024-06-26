@@ -28,13 +28,14 @@ The `Chatbot` directory serves as the virtual environment specifically created f
 The `pypyChat` directory is another virtual environment specificlly for the current attempt. This one contains packages me need including pytorch instead of tensorflow. 
 
 ### Current Version
-All the files currently displayed here represent the third version of my work. This maintains a similar structure to the third attempt but switches to PyTorch from TensorFlow, as PyTorch is more suitable for projects like this. Thie final version finally achieved the goal for a almost 0 loss rate and has a good confidence after compiling. 
+All the files currently displayed here represent the third version of my work. This maintains a similar structure to the third attempt but switches to PyTorch from TensorFlow, as PyTorch is more suitable for projects like this. Thie final version finally achieved the goal for a almost 0 loss rate and has a good confidence after compiling. \\
 To build and train the model:
 ``` python training.py ```
+\\
 To run and chat with the model:
 ``` python running.py ```
 
-#### Source Folder
+### Source Folder
 Contains intent files used in the project. One before running the no_replicate file, the other is after. 
 
 ## Note
