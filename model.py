@@ -1,27 +1,20 @@
-import tensorflow as tf
-from tensorflow.keras import layers, models
+# start using pytorch
+import torch
+import torch.nn as nn
 
-class NNetwork(tf.keras.Model):
+class NeuralN(nn.Module):
     def __init__(self, input_size, hidden_size, num_classes):
-        super(NNetwork, self).__init__()
-        # self.l1 = layers.Dense(hidden_size, input_shape=(input_size,), kernel_initializer='glorot_uniform')
-        # self.l2 = layers.Dense(hidden_size, kernel_initializer='glorot_uniform')
-        self.l1 = layers.Dense(hidden_size, input_shape=(input_size,), activation='relu', kernel_initializer='glorot_uniform')
-        self.l2 = layers.Dense(hidden_size, activation='relu', kernel_initializer='glorot_uniform')
-        self.l3 = layers.Dense(num_classes, kernel_initializer='glorot_uniform')
-        self.relu = layers.ReLU()
-        self.dropout = layers.Dropout(0.2)
-        self.batch_norm1 = layers.BatchNormalization()
-        self.batch_norm2 = layers.BatchNormalization()
-
-    def call(self, x, training=False):
-        x = self.l1(x)
-        x = self.batch_norm1(x, training=training)
-        x = self.relu(x)
-        x = self.dropout(x, training=training)
-        x = self.l2(x)
-        x = self.batch_norm2(x, training=training)
-        x = self.relu(x)
-        x = self.dropout(x, training=training)
-        x = self.l3(x)
-        return x
+        # define layers
+        super(NeuralN, self).__init__()
+        self.l1 = nn.Linear(input_size, hidden_size) 
+        self.l2 = nn.Linear(hidden_size, hidden_size) 
+        self.l3 = nn.Linear(hidden_size, num_classes)
+        self.relu = nn.ReLU()
+    
+    def forward(self, x):
+        out = self.l1(x)
+        out = self.relu(out)
+        out = self.l2(out)
+        out = self.relu(out)
+        out = self.l3(out)
+        return out

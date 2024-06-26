@@ -2,9 +2,11 @@ import numpy as np
 import random
 import json
 import jsonlines
-import tensorflow as tf 
+import torch
+import torch.nn as nn 
+from torch.utils.data import Dataset, DataLoader
 from utilities import bag_of_words, tokenize, stem
-from model import NNetwork
+from model import NeuralN
 
 # load data
 intents = []
@@ -52,77 +54,64 @@ y_train = np.array(y_train)
 # variables
 num_epochs = 1000
 batch_size = 8
-learning_rate = 0.00001
+learning_rate = 0.001
 input_size = len(x_train[0])
 hidden_size = 8
 output_size = len(tags)
 
 # define dataset class 
-class ChatDataset(tf.data.Dataset):
-    def _generator():
-        for features, label in zip(x_train, y_train):
-            yield features, label
+class ChatDataset(Dataset):
+    def __init__(self):
+        self.n_sample = len(x_train)
+        self.x_data = x_train
+        self.y_data = y_train
 
-    def __new__(cls, *args, **kwargs):
-        return tf.data.Dataset.from_generator(
-            cls._generator,
-            output_signature=(
-                tf.TensorSpec(shape=(input_size,), dtype=tf.float32),
-                tf.TensorSpec(shape=(), dtype=tf.int64)
-            )
-        )
+    def __getitem__(self, index):
+        return self.x_data[index], self.y_data[index]
+
+    def __len__(self):
+        return self.n_sample
 
 dataset = ChatDataset()
-tf_dataset = dataset.shuffle(len(x_train)).batch(batch_size)
+train_loader = DataLoader(dataset=dataset, batch_size=batch_size, shuffle=True, num_workers=0)
 
 # use gpu
-physical_devices = tf.config.list_physical_devices('GPU')
-if physical_devices:
-    tf.config.experimental.set_memory_growth(physical_devices[0], True)
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # initialize model, loss function, and optimizer
-model = NNetwork(input_size, hidden_size, output_size)
-optimizer = tf.keras.optimizers.Adam(learning_rate)
-loss_fn = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
+model = NeuralN(input_size, hidden_size, output_size).to(device)
+criterion = nn.CrossEntropyLoss() # loss function 
+optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
-
-# for epoch in range(num_epochs):
-#     for(words, labels) in tf_dataset:
-#         with tf.GradientTape() as tape:
-#             outputs = model(words, training = True)
-#             loss = loss_fn(labels, outputs)
-
-#         gradients = tape.gradient(loss, model.trainable_variables)
-#         optimizer.apply_gradients(zip(gradients, model.trainable_variables))
-
-#     if (epoch+1) % 100 == 0:
-#         print (f'Epoch [{epoch+1}/{num_epochs}], Loss: {loss.numpy():.4f}')
 for epoch in range(num_epochs):
-    for i in range(0, len(x_train), batch_size):
-        batch_x = x_train[i:i+batch_size]
-        batch_y = y_train[i:i+batch_size]
+    for words, labels in train_loader:
+        words = words.to(device)
+        labels = labels.to(dtype=torch.long).to(device)
 
-        with tf.GradientTape() as tape:
-            logits = model(batch_x, training=True)
-            loss = loss_fn(batch_y, logits)
+        # forward
+        output = model(words)
+        loss = criterion(output, labels)
 
-        gradients = tape.gradient(loss, model.trainable_variables)
-        optimizer.apply_gradients(zip(gradients, model.trainable_variables))
+        # backward 
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
 
-    if (epoch + 1) % 100 == 0:
-        print(f'Epoch [{epoch+1}/{num_epochs}], Loss: {loss.numpy():.4f}')
+    # print
+    if (epoch+1) % 100 == 0:
+        print(f'Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}')
 
 # save model data
 data = {
-    "input_size": input_size,
-    "hidden_size": hidden_size,
-    "output_size": output_size,
-    "all_wordss": all_wordss,
-    "tags": tags
+"model_state": model.state_dict(),
+"input_size": input_size,
+"hidden_size": hidden_size,
+"output_size": output_size,
+"all_words": all_words,
+"tags": tags
 }
-with open('metadata.json', 'w') as f:
-    json.dump(data, f)
 
-# Save model
-model.save('model_tf') 
-print(f'Training complete. Model saved.')
+FILE = "data.pth"
+torch.save(data, FILE)
+
+print(f'training complete. file saved to {FILE}')

@@ -12,7 +12,7 @@ def tokenize(sentence):
 
 # find the root 
 def stem(word):
-    stemmer.stem(word.lower())
+    return stemmer.stem(word.lower())
 
 # determine each word in the sentence 
 def bag_of_words(tokenized, words):
